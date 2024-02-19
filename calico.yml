@@ -1,0 +1,6 @@
+---
+- name: install calico for networking
+  hosts: all
+  tasks:
+  - name: deploy calico for networking
+    command: kubectl create -f https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/hosted/calico.yaml

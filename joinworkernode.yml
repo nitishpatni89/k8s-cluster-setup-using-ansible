@@ -1,0 +1,20 @@
+---
+- name: join worker node
+  hosts: aero-slave
+  tasks:
+    ##- name: copy admin config file
+    ##command: "cp -i /etc/kubernetes/admin.conf /home/root/.kube/config"
+  - name: execute token generation command
+    command: "kubeadm token generate"
+    register: token
+  - name: dispay token command
+    debug:
+      msg: "{{ token.stdout }}"
+  - name: get master node ip
+    setup:
+      gather_subset: all
+    register: ip
+  - debug:
+      msg: "{{ ip.ansible_facts.ansible_enp0s8.ipv4.address }}"
+  - name: join command on worker node 
+    command: kubeadm join {{ ip.ansible_facts.ansible_enp0s8.ipv4.address }}:6443 --token {{ token.stdout }} --discovery-token-unsafe-skip-ca-verification

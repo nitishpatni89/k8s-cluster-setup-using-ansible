@@ -1,0 +1,11 @@
+---
+- name: disable swap on worker node
+  hosts: all
+  become: yes
+  become_user: root
+  tasks:
+  - name: to delete swap line from fstab
+    command: "sed -i '/swap/d' /etc/fstab"
+  - name: reboot the machine
+    command: init 6
+   

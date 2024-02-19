@@ -1,0 +1,28 @@
+---
+- name: create and edit file config.yml on masternode
+  hosts: aero-slave
+  tasks:
+  - name: create a file
+    file:
+       path: /var/lib/kubelet/config.yml
+       state: touch
+       owner: root
+       group: root
+  - name: inset following lines in config.yml
+    blockinfile:
+       insertbefore: BOF
+       path: /var/lib/kubelet/config.yml
+       block: |
+         apiVersion: kubelet.config.k8s.io/v1beta1
+         kind: KubeletConfiguration
+         cgroupDriver: systemd
+  - name: perform following command
+    command: "{{item}}"
+    with_items:
+      - mkdir -p $HOME/.kube
+      - sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+      - sudo chown root:root $HOME/.kube/config
+
+
+
+

@@ -1,0 +1,13 @@
+---
+- name: restart services
+  hosts: all
+  tasks:
+  - name: restart all required services
+    service:
+      name: {{ item }}
+      state: restarted
+      enabled: yes
+    with_items:
+      - docker
+      - kubelet
+
